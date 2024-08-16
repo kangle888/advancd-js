@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 使用promise 来替代回调地狱
+      // 1. 使用promise
+
+      function requsetData(params) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(params);
+          }, 1000);
+        });
+      }
+      // 这样链式调用阅读起来也是链式的
+      function getData() {
+        requsetData("第一次请求")
+          .then((res1) => {
+            console.log("第一次请求成功", res1);
+            return requsetData("第二次请求" + res1);
+          })
+          .then((res2) => {
+            console.log("第二次请求成功", res2);
+            return requsetData("第三次请求" + res2);
+          })
+          .then((res3) => {
+            console.log("第三次请求成功" + res3);
+          });
+      }
+      // getData();
+
+      // 2. 使用async await
+      function* getData2() {
+        const res1 = yield requsetData("第一次请求");
+        console.log("第一次请求成功", res1);
+        const res2 = yield requsetData("第二次请求" + res1);
+        console.log("第二次请求成功", res2);
+        const res3 = yield requsetData("第三次请求" + res2);
+        console.log("第三次请求成功", res3);
+      }
+
+      // const generator = getData2();
+      // generator.next().value.then((res1) => {
+      //   generator.next(res1).value.then((res2) => {
+      //     generator.next(res2).value.then((res3) => {
+      //       generator.next(res3);
+      //     });
+      //   });
+      // });
+      // 封装自动化执行generator函数
+      function run(generator) {
+        const iterator = generator();
+        function next(data) {
+          const result = iterator.next(data);
+          if (result.done) {
+            return;
+          }
+          result.value.then((res) => {
+            next(res);
+          });
+        }
+        next();
+      }
+
+      // 3. 使用async await  语法糖
+
+      async function getData3() {
+        const res1 = await requsetData("第一次请求");
+        console.log("第一次请求成功", res1);
+        const res2 = await requsetData("第二次请求" + res1);
+        console.log("第二次请求成功", res2);
+        const res3 = await requsetData("第三次请求" + res2);
+        console.log("第三次请求成功", res3);
+      }
+
+      getData3();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+     function execCode(counter) {
+      const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (counter > 0) {
+              let total = 0
+              for (let i = 0; i < 100; i++) {
+                total += i
+              }
+              resolve(total)
+            }else {
+              reject('fail')
+            }
+          }, 1000)
+        })
+      return promise
+    }
+    const promise =   execCode(10)
+    promise.then(res => {
+      console.log('成功', res)
+    }).catch(err => {
+      console.log('失败', err)
+    })
+
+    //1. Promise创建
+    //2. Promise状态 pending fulfilled rejected
+
+    const promise1 = new Promise((resolve, reject) => {
+      resolve('成功')
+      reject('失败') 
+    })
+
+    promise1.then(res => {
+      console.log('成功', res)
+    })
+
+    //3. Promise  resolve 的值
+    const promise2 = new Promise((resolve, reject) => {
+      // 1、resolve的值是一个普通值
+      // resolve('成功123')
+      // 2、resolve的值是一个Promise对象
+      // 如果resolve的值是一个Promise对象，那么会等待这个Promise对象的状态发生改变，才会执行后续的then方法
+      // resolve(new Promise((resolve, reject) => {
+      //  resolve('Promise对象成功456')
+      // }))
+      // 3、resolve的值是一个thenable对象
+      resolve({
+        then(resolve, reject) {
+          resolve('thenable对象成功789')
+        }
+      })
+
+
+    })
+
+    promise2.then(res => {
+      console.log('成功2', res)
+    })
+
+    // promise的cache方法调度
+
+    const promise3 = new Promise((resolve, reject) => {
+      reject('失败')
+    })
+
+    promise3.then(res => {
+      console.log('成功3', res)
+    }).catch(err => {
+      console.log('失败3', err)
+    })
+
+    promise3.catch(err => {
+      console.log('失败3', err)
+    })
+
+    // 39
+  </script>
+</body>
+</html>

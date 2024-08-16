@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 5. 生成器代替迭代器
+      // 生成器函数
+      function* makeIterator(array) {
+        for (let i = 0; i < array.length; i++) {
+          yield array[i];
+        }
+      }
+
+      const names = ["张三", "李四", "王五"];
+      const iterator = makeIterator(names);
+
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+
+      // 生成器函数可以生成某个范围的值
+      function* range(start, end) {
+        for (let i = start; i <= end; i++) {
+          yield i;
+        }
+      }
+      const rangeIterator = range(1, 5);
+      console.log(rangeIterator.next());
+      console.log(rangeIterator.next());
+    </script>
+  </body>
+</html>

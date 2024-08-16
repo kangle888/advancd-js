@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /**
+     * Reflect
+     * 1. 用于替代Object对象
+     * 2. 为操作对象提供了新的API
+     * 3. 以后Object上的方法都会迁移到Reflect上
+     * 5. Reflect上的方法是一个函数，而Object上的方法是一个函数和一个属性
+     * */
+    const obj = {
+      name: '张三',
+      age: 18,
+      height: 180
+    }
+    const objProxy = new Proxy(obj, {
+      get(target, key) {
+        console.log('get获取值', key)
+        return Reflect.get(target, key)
+      },
+      set(target, key, value, receiver) {
+        // 代理对象的目的 
+        // 好处 1 ： 不再直接操作对象，而是通过代理对象来操作对象
+        // 好处 2 ： Reflect.set方法有返回值，返回值是一个布尔值，表示是否设置成功
+        // 好处 3 ： 
+        //      >  receiver参数，表示当前操作的对象 
+        //      >  通过receiver参数可以解决this指向问题,可以决定set、get方法中的this指向
+        console.log('set设置值', key, value, receiver)
+        return Reflect.set(target, key, value, receiver)
+      }
+    })
+    console.log(objProxy.name)
+    objProxy.name = '李四'
+
+  </script>
+</body>
+</html>

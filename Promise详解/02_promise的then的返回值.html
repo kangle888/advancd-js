@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const promise = new Promise((resolve, reject) => {
+        resolve("aaaa");
+      });
+
+      promise
+        .then((res) => {
+          console.log("成功", res);
+          // 这里的return '成功2'会被包装成一个Promise对象，然后返回，传递给下一个then方法
+          // 类似于 return new Promise((resolve, reject) => { resolve('成功2') })
+          return "成功2";
+        })
+        .then((res) => {
+          console.log("成功2", res);
+          return new Promise((resolve, reject) => {
+            resolve("成功3");
+          });
+        })
+        .then((res) => {
+          console.log("成功3", res);
+        })
+        .catch((err) => {
+          console.log("失败", err);
+        });
+
+      const promise1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("bbbbb");
+        }, 1000);
+      });
+
+      promise1
+        .then((res) => {
+          console.log("成功", res);
+          return promise1;
+        })
+        .then((res) => {
+          console.log("成功2", res);
+        });
+    </script>
+  </body>
+</html>

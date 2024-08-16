@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const obj = {
+      name: '张三',
+      age: 18,
+      height: 180
+    }
+    // let _name = obj.name
+    // Object.defineProperty(obj, 'name', {
+    //   set(val) {
+    //     _name = val
+    //     console.log('set设置name的值', val)
+    //   },
+    //   get() {
+    //     console.log('get获取name的值')
+    //     return _name
+    //   }
+    // })
+    // vue2 的核心数据监听原理
+    // Object.defineProperty设计初衷根本不是为了监听数据变化的，而是为了创建一个不可枚举的属性
+    // 对于新增属性 和 删除属性 无能为力
+    const keys = Object.keys(obj)
+    keys.forEach(key => {
+      let _val = obj[key]
+      Object.defineProperty(obj, key, {
+        set(newVal) {
+          _val = newVal
+          console.log(`set设置${key}的值`, newVal)
+        },
+        get() {
+          console.log(`get获取${key}的值`)
+          return _val
+        }
+      })
+    })
+    // console.log(obj.name)
+    // obj.name = '李四'
+
+    // console.log(obj.age)
+    // obj.age = 20
+
+    /**
+     * Proxy
+     * 1. 代理对象
+     * 
+     * */
+     const obj1 = {
+      name: '张三',
+      age: 18,
+      height: 180
+    }
+      // 1. 创建一个代理对象
+    const proxy = new Proxy(obj1, {
+      // 2. 拦截对象的读取
+      get(target, key) {
+        console.log('get', key)
+        return target[key]
+      },
+      // 3. 拦截对象的设置
+      set(target, key, value) {
+        console.log('set', key, value)
+        target[key] = value
+      },
+      // 4. 拦截对象的删除
+      deleteProperty(target, key) {
+        console.log('delete', key)
+        delete target[key]
+      },
+      // 5. 拦截对象的属性检测
+      has(target, key) {
+        console.log('has', key)
+        return key in target
+      }      
+    })
+    // 监听函数对象
+    function foo(num1, num2) {
+      console.log('foo', num1, num2)
+    }
+    const proxy1 = new Proxy(foo, {
+      apply(target, thisArg, args) {
+        console.log('apply', args)
+        return target()
+      }
+    })
+
+    proxy1.apply("abc", [1, 2])
+  
+
+  </script>
+</body>
+</html>

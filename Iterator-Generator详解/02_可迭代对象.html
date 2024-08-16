@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /**
+       * 1、将infos对象转换为可迭代对象
+       * 2、 这个函数返回一个迭代器对象，这个迭代器对象有一个next方法，每次调用next方法都会返回一个对象，这个对象有两个属性，一个是value，一个是done
+       * 3、可迭代对象必须有一个Symbol.iterator属性，这个属性的值是一个函数，这个函数返回一个迭代器对象
+       * */
+      const infos = {
+        friends: ["张三", "李四", "王五"],
+        [Symbol.iterator]: function () {
+          let index = 0;
+          const friends = this.friends;
+          return {
+            next: () => {
+              const done = index >= friends.length;
+              const value = !done ? friends[index++] : undefined;
+              return {
+                value,
+                done,
+              };
+            },
+          };
+        },
+      };
+      // 可迭代对象必须有一个Symbol.iterator属性，这个属性的值是一个函数，这个函数返回一个迭代器对象
+      // 迭代器对象有一个next方法，每次调用next方法都会返回一个对象，这个对象有两个属性，一个是value，一个是done
+
+      const iterator = infos[Symbol.iterator]();
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+
+      // 可迭代对象可以使用for...of循环
+
+      for (const friend of infos) {
+        console.log(friend);
+      }
+
+      // 对象 person
+      const person = {
+        name: "张三",
+        age: 18,
+        [Symbol.iterator]: function () {
+          let index = 0;
+          const keys = Object.keys(this);
+          const keys1 = Object.entries(this);
+          console.log(keys1);
+          return {
+            next: () => {
+              const done = index >= keys.length;
+              // 这里的this指向的是person对象,上面改成了箭头函数
+              const value = !done ? this[keys[index++]] : undefined;
+              return {
+                value,
+                done,
+              };
+            },
+          };
+        },
+      };
+
+      for (const p of person) {
+        console.log(p);
+      }
+
+      // 自定义类的迭代器
+      class Person {
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+        [Symbol.iterator]() {
+          let index = 0;
+          const keys = Object.keys(this);
+          return {
+            next: () => {
+              const done = index >= keys.length;
+              const value = !done ? this[keys[index++]] : undefined;
+              return {
+                value,
+                done,
+              };
+            },
+          };
+        }
+      }
+
+      const p1 = new Person("李四", 20);
+
+      for (const p of p1) {
+        console.log(p);
+      }
+    </script>
+  </body>
+</html>

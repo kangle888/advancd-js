@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // resolve("p1");
+          reject("p1失败了");
+        }, 1000);
+      });
+
+      const p2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p2");
+        }, 2000);
+      });
+
+      const p3 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p3");
+        }, 3000);
+      });
+
+      // Promise.all方法接收一个数组参数，数组的每一项都是一个Promise对象
+
+      Promise.all([p1, p2, p3])
+        .then((res) => {
+          console.log("成功", res);
+        })
+        .catch((err) => {
+          console.log("失败", err);
+        });
+
+      // ES11 allSettled 方法
+      // 当所有的promise都已敲定（settled）时，返回一个promise，该promise在所有promise已敲定后解析为一个对象数组。
+      Promise.allSettled([p1, p2, p3]).then((res) => {
+        console.log("成功allSettled", res);
+      });
+
+      // ES11 race 方法
+      // 当迭代器中的第一个promise解析为完成时，返回一个promise，该promise解析为该promise的完成值。
+      Promise.race([p1, p2, p3]).then((res) => {
+        console.log("成功race", res);
+      });
+
+      // ES12 any 方法
+      // 当迭代器中的任何一个promise解析为完成时，返回一个promise，该promise解析为第一个完成的promise的完成值。
+      Promise.any([p1, p2, p3])
+        .then((res) => {
+          // 如果有一个promise对象的状态是fulfilled，那么会执行then方法
+          // 如果所有的promise对象的状态是rejected，那么会执行catch方法
+          console.log("成功any", res);
+        })
+        .catch((err) => {
+          console.log("失败any", err);
+        });
+    </script>
+  </body>
+</html>

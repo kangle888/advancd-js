@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 5. 生成器语法糖
+      function* makeIterator(array) {
+        yield* array;
+      }
+
+      const names = ["张三", "李四", "王五"];
+      const iterator = makeIterator(names);
+
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+      console.log(iterator.next());
+
+      // 生成器在类中的使用
+      class Person {
+        constructor(names) {
+          this.names = names;
+        }
+
+        *[Symbol.iterator]() {
+          yield* this.names;
+        }
+      }
+
+      const person = new Person(["张三", "李四", "王五"]);
+      for (const name of person) {
+        console.log(name);
+      }
+    </script>
+  </body>
+</html>

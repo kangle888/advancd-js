@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // then 会放到微任务队列中
+      // resolve()，这只是将 Promise 标记为已解决（fulfilled），它不会立即触发 then 中的回调，而是将回调放入微任务队列。
+      // console.log("promise2");
+      // 紧接着打印 promise2，这是在 resolve() 之后的代码，依然是同步任务，所以也立即执行。
+      console.log("script start");
+      new Promise((resolve, reject) => {
+        console.log("promise1");
+        resolve();
+        console.log("promise2");
+      }).then(() => {
+        console.log("then1");
+      });
+
+      console.log("script end");
+
+      // 宏任务  ： ajax setTimeout setInterval DOM事件 requestAnimationFrame等
+      // 微任务  ： Promise.then  async await   queueMicrotask MutationObserver等
+      /**
+       * 经典题目 注意消化
+       *
+       */
+      console.log("script start");
+      function requestData(url) {
+        return new Promise((resolve) => {
+          // 这里注意 这里 需要等待2s 才加入到宏任务队列中
+          setTimeout(() => {
+            console.log("请求数据成功");
+            resolve(url);
+          }, 1000);
+        });
+      }
+      function getData() {
+        console.log("开始获取数据");
+        // 此时 then 需要 setTimeout 加入宏任务队列中，执行后 then 才会加入到微任务队列中
+        requestData("www.baidu.com").then((res) => {
+          console.log("数据获取成功", res);
+        });
+        console.log("结束获取数据");
+      }
+
+      getData();
+      console.log("script end");
+    </script>
+  </body>
+</html>

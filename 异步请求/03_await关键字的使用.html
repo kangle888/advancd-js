@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function async1() {
+        console.log("async1 start");
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log("async1 promise");
+            // resolve("123");
+            reject("error");
+          }, 1000);
+        });
+      }
+
+      async function foo() {
+        console.log("foo start");
+        // 这里await后面的代码会被放到微任务队列中
+        // 这里的await会等待async1()  promise函数执行完毕，才会执行后面的代码
+        try {
+          const res = await async1();
+          console.log("await后面的代码", res);
+        } catch (error) {
+          console.log("error", error);
+        }
+        console.log("await后面的代码", res);
+        console.log("foo end");
+      }
+
+      foo();
+    </script>
+  </body>
+</html>
